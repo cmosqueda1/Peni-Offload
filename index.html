@@ -3,49 +3,66 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>FMS Offload Tool</title>
+<title>Peni FMS Offload Tool</title>
 
 <style>
-  :root{--bg:#0a0c10;--card:#0f1420;--text:#e6edf6;--muted:#93a4b7;--accent:#7c3aed;--accent2:#22d3ee;--ok:#10b981;--bad:#ef4444;--border:#1f2a3a}
-  *{box-sizing:border-box}
-  html,body{margin:0;background:radial-gradient(1200px 900px at 10% -10%, #121a2b 0%, transparent 60%), var(--bg);color:var(--text);font-family:Inter,system-ui,Segoe UI,Roboto,Ubuntu,Arial,sans-serif}
-  .wrap{max-width:980px;margin:40px auto;padding:0 16px 64px}
-  h1{margin:0 0 6px;font-size:26px;font-weight:800}
-  .sub{color:var(--muted);margin-bottom:18px}
-  .card{background:linear-gradient(180deg, rgba(255,255,255,.02), transparent), var(--card);border:1px solid var(--border);border-radius:18px;padding:18px;box-shadow:0 10px 30px rgba(0,0,0,.35)}
-  .stack{display:grid;gap:12px}
-  textarea{width:100%;min-height:220px;background:#0b0f19;border:1px solid var(--border);color:var(--text);border-radius:14px;padding:12px 14px;font-size:14px;line-height:1.4;resize:vertical;outline:none}
-  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  .btn{cursor:pointer;border:1px solid transparent;border-radius:14px;padding:12px 16px;font-weight:700;font-size:14px}
-  .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent2)); color:#060913}
-  .btn-ghost{background:transparent;border-color:var(--border);color:var(--text)}
-  .btn:disabled{opacity:.6;cursor:not-allowed}
-  .pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:#0b0f19;font-size:12px;color:var(--muted)}
-  .bar{height:12px;border-radius:999px;background:#0b0f19;border:1px solid var(--border);overflow:hidden}
-  .fill{height:100%;width:0;background:linear-gradient(90deg,var(--ok),var(--accent2));transition:width .2s ease}
-  .muted{color:var(--muted);font-size:12px}
-  pre{white-space:pre-wrap;word-break:break-word;background:#0b0f19;border:1px solid var(--border);border-radius:14px;padding:12px;font-size:13px;max-height:420px;overflow:auto}
+:root{
+  --bg:#0a0c10;--card:#0f1420;--text:#e6edf6;--muted:#93a4b7;
+  --accent:#7c3aed;--accent2:#22d3ee;--ok:#10b981;--bad:#ef4444;--border:#1f2a3a
+}
+*{box-sizing:border-box}
+html,body{
+  margin:0;
+  background:radial-gradient(1200px 900px at 10% -10%, #121a2b 0%, transparent 60%), var(--bg);
+  color:var(--text);
+  font-family:Inter,system-ui,Segoe UI,Roboto,Ubuntu,Arial,sans-serif
+}
+.wrap{max-width:980px;margin:40px auto;padding:0 16px 64px}
+h1{margin:0 0 6px;font-size:26px}
+.sub{color:var(--muted);margin-bottom:18px}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.02), transparent), var(--card);
+  border:1px solid var(--border);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,.35)
+}
+textarea{
+  width:100%;
+  min-height:200px;
+  background:#0b0f19;
+  border:1px solid var(--border);
+  color:var(--text);
+  border-radius:14px;
+  padding:12px;
+}
+.row{display:flex;gap:10px;align-items:center}
+.btn{cursor:pointer;border-radius:14px;padding:10px 16px;border:1px solid var(--border)}
+.btn-primary{
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  color:#05070b;font-weight:700
+}
+.btn-ghost{background:transparent;color:var(--text)}
+.bar{height:10px;background:#0b0f19;border-radius:999px;border:1px solid var(--border);overflow:hidden}
+.fill{height:100%;width:0;background:linear-gradient(90deg,var(--ok),var(--accent2))}
+pre{
+  background:#0b0f19;border-radius:14px;border:1px solid var(--border);
+  padding:12px;white-space:pre-wrap
+}
+.muted{font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
+
 <div class="wrap">
-  <h1>FMS Offload Tool</h1>
+  <h1>Peni FMS Offload Tool</h1>
   <div class="sub">
     Paste PRO numbers and run Offload.  
-    All offloads are automatically sent to terminal <strong>HAY</strong>.
-    <br>
-    Use <strong>Check Order Info</strong> for read-only order validation.
+    All orders are automatically offloaded to **HAY**.
   </div>
 
-  <div class="card stack">
-
-    <span class="pill">Offload Terminal: HAY</span>
-
-    <textarea id="input" placeholder="61807173
-61804271, 61804311
-3178258 3178259
-18391571"></textarea>
-
+  <div class="card">
+    <textarea id="input" placeholder="3034414 / 3039888 / 3034414 / 62102175"></textarea>
     <div class="muted" id="proMeta">0 PROs detected</div>
 
     <div class="row">
@@ -54,74 +71,58 @@
       <button class="btn btn-ghost" id="export" disabled>Export Results (.txt)</button>
     </div>
 
-    <div class="row" style="justify-content:space-between">
-      <div class="muted" id="status">Idle</div>
-      <div class="muted" id="eta">ETA —</div>
+    <div class="row muted" style="justify-content:space-between">
+      <div id="status">Idle</div>
+      <div id="eta">ETA —</div>
     </div>
 
     <div class="bar"><div class="fill" id="fill"></div></div>
     <div class="muted" id="counts">0/0</div>
-
   </div>
 
   <div class="card" style="margin-top:16px">
-      <strong>Output</strong>
-      <pre id="out"></pre>
+    <strong>Output</strong>
+    <pre id="out"></pre>
   </div>
 </div>
 
 <script>
 (() => {
 
-/* =========================
-   CONFIG
-========================= */
-const BASE = "https://fms.item.com";
-const COMPANY_ID = "SBFH";
-const FMS_CLIENT = "FMS_WEB";
+const BASE="https://fms.item.com";
+const FMS_CLIENT="FMS_WEB";
+const COMPANY_ID="SBFH";
 
-const USERNAME = "PeniTaufalele";
-const PASSWORD = "FMSoffload1!";
+const USERNAME="PeniTaufalele";
+const PASSWORD="FMSoffload1!";
+const HARD_TERMINAL="HAY";
 
-const HARD_TERMINAL = "HAY";
-const MAX_ORDERS = 150;
-const RETRIES = 2;
+const LOGIN_URL=`${BASE}/fms-platform-user/Auth/Login`;
+const SEARCH_URL=`${BASE}/fms-platform-order/shipment-orders/query`;
+const OFFLOAD_URL=`${BASE}/fms-platform-order/status/shipment/set-offload`;
 
-const LOGIN_URL  = `${BASE}/fms-platform-user/Auth/Login`;
-const SEARCH_URL = `${BASE}/fms-platform-order/shipment-orders/query`;
-const OFFLOAD_URL = `${BASE}/fms-platform-order/status/shipment/set-offload`;
+const ORDER_BASIC_URL=`${BASE}/fms-platform-order/shipper/getshipment-orderbasic/`;
+const ORDER_HEAD_URL=`${BASE}/fms-platform-order/shipper/getshipment-orderbasic-headinfo/`;
 
-const ORDER_BASIC_URL = `${BASE}/fms-platform-order/shipper/getshipment-orderbasic/`;
-const ORDER_HEAD_URL  = `${BASE}/fms-platform-order/shipper/getshipment-orderbasic-headinfo/`;
+const MAX_ORDERS=150, RETRIES=2;
 
-/* ========================= */
-const $ = id=>document.getElementById(id);
-
-const input = $("input");
-const runBtn = $("run");
-const prevBtn = $("preview");
-const expBtn = $("export");
-
-const proMeta = $("proMeta");
-const out = $("out");
-const status = $("status");
-const eta = $("eta");
-const fill = $("fill");
-const counts = $("counts");
+const $=id=>document.getElementById(id);
 
 let TOKEN=null;
 
-const parsePros = t => (String(t).match(/\b\d{6,14}\b/g) || []);
-const now=()=>Date.now();
+const input=$("input");
+const runBtn=$("run");
+const prevBtn=$("preview");
+const exportBtn=$("export");
+const proMeta=$("proMeta");
+const out=$("out");
+const status=$("status");
+const eta=$("eta");
+const fill=$("fill");
+const counts=$("counts");
 
-function setProg(done,total,start){
-  fill.style.width=(total?done/total*100:0)+"%";
-  counts.textContent=`${done}/${total||0}`;
-  if(!total) return eta.textContent="ETA —";
-  const elapsed=(Date.now()-start)/1000;
-  const rate=done?done/elapsed:0;
-  const rem=rate?(total-done)/rate:0;
-  eta.textContent=`ETA ${Math.floor(rem)}s`;
+function parsePros(t){
+  return [...new Set((String(t).match(/\b\d{6,14}\b/g)||[]))];
 }
 
 async function auth(){
@@ -129,44 +130,43 @@ async function auth(){
   const r=await fetch(LOGIN_URL,{
     method:"POST",
     headers:{
-      "fms-client":FMS_CLIENT,
-      "Content-Type":"application/json"
+      "Content-Type":"application/json",
+      "fms-client":FMS_CLIENT
     },
     body:JSON.stringify({account:USERNAME,password:PASSWORD})
   });
   const j=await r.json();
   TOKEN=j.token||j?.data?.token;
-  if(!TOKEN) throw new Error("Auth failed");
+  if(!TOKEN) throw new Error("Login failed");
   return TOKEN;
 }
 
-async function searchOrders(token,tracking_nos){
+async function searchOrders(token,pros){
   const r=await fetch(SEARCH_URL,{
     method:"POST",
     headers:{
+      "Content-Type":"application/json",
       "fms-client":FMS_CLIENT,
       "fms-token":token,
-      "Content-Type":"application/json",
       "Company-Id":COMPANY_ID
     },
     body:JSON.stringify({
-      tracking_nos,
+      tracking_nos:pros,
       page_number:1,
-      page_size:tracking_nos.length,
+      page_size:pros.length,
       record_status:"0"
     })
   });
   return r.json();
 }
 
-function buildMap(j){
+function buildMap(data){
   const map={};
-  const items=j?.data?.items||[];
-  for(const it of items){
-    if(it.tracking_no && it.order_no){
-      map[it.tracking_no]=it.order_no;
+  (data?.data?.items||[]).forEach(i=>{
+    if(i.tracking_no && i.order_no){
+      map[i.tracking_no]=i.order_no;
     }
-  }
+  });
   return map;
 }
 
@@ -177,69 +177,125 @@ function reset(){
   eta.textContent="ETA —";
 }
 
-function line(msg){
-  out.textContent += (out.textContent?"\n":"")+msg;
+function line(t){
+  out.textContent+=(out.textContent?"\n":"")+t;
 }
 
-async function run(){
+async function runOffload(){
   reset();
-  const pros=parsePros(input.value);
-  if(!pros.length) return line("[Error] No PROs found.");
-
   try{
+    const pros=parsePros(input.value);
+    if(!pros.length) return line("[Error] No PROs detected.");
+
     status.textContent="Authenticating…";
     const token=await auth();
 
-    status.textContent="Searching orders…";
+    status.textContent="Searching…";
     const data=await searchOrders(token,pros.slice(0,MAX_ORDERS));
-
     const map=buildMap(data);
-    const pairs=[];
 
-    for(const p of pros){
-      if(map[p]) pairs.push([p,map[p]]);
-      else line(`${p} -> (no DO found) ---`);
-    }
+    const list=[];
+    pros.forEach(p=>{
+      map[p]?list.push([p,map[p]]):line(`${p} -> (no DO found) ---`);
+    });
+
+    const total=list.length;
+    let done=0;
 
     status.textContent="Running Offload…";
-    const start=now();
-    setProg(0,pairs.length,start);
 
-    for(let i=0;i<pairs.length;i++){
-      const [pro,DO]=pairs[i];
-      const key=Number(DO.replace(/\D/g,""));
-
+    for(const [pro,DO] of list){
+      const key=DO.replace(/\D/g,"");
       let ok=false;
 
       for(let a=0;a<=RETRIES;a++){
-        try{
-          const r=await fetch(OFFLOAD_URL,{
-            method:"POST",
-            headers:{
-              "fms-client":FMS_CLIENT,
-              "fms-token":token,
-              "company-id":COMPANY_ID,
-              "Content-Type":"application/json"
-            },
-            body:JSON.stringify({
-              order_status:"Override Offload",
-              order_keys:[key],
-              terminal:HARD_TERMINAL
-            })
-          });
-          const j=await r.json().catch(()=>({}));
-          if(r.ok && j?.data?.success!==false){ ok=true; break;}
-        }catch{}
+        const r=await fetch(OFFLOAD_URL,{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json",
+            "fms-client":FMS_CLIENT,
+            "fms-token":token,
+            "company-id":COMPANY_ID
+          },
+          body:JSON.stringify({
+            order_status:"Override Offload",
+            order_keys:[Number(key)],
+            terminal:HARD_TERMINAL
+          })
+        });
+
+        if(r.ok){ ok=true; break; }
       }
 
-      if(ok) line(`${pro} | PU - -> ${DO} - offloaded @ ${HARD_TERMINAL} ---`);
-      else   line(`${pro} | PU - -> ${DO} | Offload failed ---`);
+      if(ok){
+        line(`${pro} | PU - -> ${DO} - offloaded @ HAY ---`);
+      }else{
+        line(`${pro} | PU - -> ${DO} | Offload failed ---`);
+      }
 
-      setProg(i+1,pairs.length,start);
+      done++;
+      fill.style.width=(done/total*100)+"%";
+      counts.textContent=`${done}/${total}`;
     }
 
     status.textContent="Done";
-    expBtn.disabled=!out.textContent;
+    exportBtn.disabled=false;
+
+  }catch(e){
+    status.textContent="ERROR";
+    line(`[ERROR] ${e.message}`);
+  }
+}
+
+async function checkInfo(){
+  reset();
+  try{
+    const pros=parsePros(input.value);
+    if(!pros.length) return line("[Error] No PROs detected.");
+
+    status.textContent="Authenticating…";
+    const token=await auth();
+
+    status.textContent="Searching…";
+    const data=await searchOrders(token,pros.slice(0,MAX_ORDERS));
+    const map=buildMap(data);
+
+    for(const p of pros){
+      const DO=map[p];
+      if(!DO){
+        line(`${p} -> (no DO found) ---`);
+        continue;
+      }
+
+      let loc="—", statusTxt="—", sub="—", pu="-";
+
+      const headers={
+        "fms-client":FMS_CLIENT,
+        "fms-token":token,
+        "Company-Id":COMPANY_ID
+      };
+
+      try{
+        const b=await fetch(ORDER_BASIC_URL+DO,{headers});
+        const jb=await b.json();
+        const d=jb?.data||jb;
+        loc=d?.current_location||loc;
+        pu=d?.reference5||pu;
+      }catch{}
+
+      try{
+        const h=await fetch(ORDER_HEAD_URL+DO,{headers});
+        const jh=await h.json();
+        const d=jh?.data||jh;
+        statusTxt=d?.order_status_describe||statusTxt;
+        sub=d?.order_sub_status_describe||sub;
+      }catch{}
+
+      line(`${p} | PU ${pu} -> ${DO} | Loc: ${loc} | Status: ${statusTxt} | Substatus: ${sub} ---`);
+    }
+
+    status.textContent="Done";
+    exportBtn.disabled=false;
 
   }catch(e){
     status.textContent="ERROR";
@@ -249,43 +305,18 @@ async function run(){
 
 input.addEventListener("input",()=>{
   const p=parsePros(input.value);
-  proMeta.textContent=`${p.length} PRO${p.length===1?"":"s"} detected`;
+  proMeta.textContent=`${p.length} PRO${p.length==1?"":"s"} detected`;
   runBtn.disabled=!p.length;
   prevBtn.disabled=!p.length;
 });
 
-runBtn.addEventListener("click",run);
+runBtn.addEventListener("click", runOffload);
+prevBtn.addEventListener("click", checkInfo);
 
-prevBtn.addEventListener("click", async ()=>{
-  reset();
-  const pros=parsePros(input.value);
-  if(!pros.length) return line("[Error] No PROs found.");
-
-  try{
-    status.textContent="Authenticating…";
-    const token=await auth();
-
-    status.textContent="Searching orders…";
-    const data=await searchOrders(token,pros.slice(0,MAX_ORDERS));
-    const map=buildMap(data);
-
-    for(const p of pros){
-      const DO=map[p];
-      if(!DO) line(`${p} -> (no DO found) ---`);
-      else line(`${p} -> ${DO} ---`);
-    }
-    status.textContent="Done";
-
-  }catch(e){
-    status.textContent="ERROR";
-    line(`[ERROR] ${e.message}`);
-  }
-});
-
-expBtn.addEventListener("click",()=>{
+exportBtn.addEventListener("click",()=>{
   const a=document.createElement("a");
   a.href=URL.createObjectURL(new Blob([out.textContent]));
-  a.download=`fms_offload_${Date.now()}.txt`;
+  a.download=`peni_fms_offload_${Date.now()}.txt`;
   a.click();
 });
 
